@@ -1278,7 +1278,7 @@ function generateGuessNumber() {
         }
         opponentNumber.special = true;
     }
-    if(opponent.special){
+    if(opponentNumber.special){
       numberToGuess = getSpecialArray();
       return numberToGuess;
     }
