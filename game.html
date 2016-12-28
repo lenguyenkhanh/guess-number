@@ -17,16 +17,26 @@
 </head>
 <body>
 	<div class="container">
-		<div class="row">
-		  <div class="col-md-offset-4 col-md-2">
-		  	<button class="btn btn-primary" type="submit">Easy</button>
+		<div class="row row-mode">
+		  <div class="col-md-offset-2 col-md-3">
+		  	<button class="btn btn-primary btn-mode easy-mode" type="submit">Easy</button>
 		  </div>
-		  <div class="col-md-2">
-		  	<button class="btn btn-primary" type="submit">Normal</button>
+		  <div class="col-md-offset-2 col-md-3">
+		  	<button class="btn btn-primary btn-mode normal-mode" type="submit">Normal</button>
 		  </div>
 		</div>
 		<div class="row description">
-			Em chỉ chơi được số 5 chữ số thôi nha
+			
+		</div>
+		<div class="text-label text-center person">Chị đoán</div>
+		<div class="row input center">
+			<div class="col-md-4 col-md-offset-4">
+				<input type="text" class="form-control guess-number" id="number" onkeydown="getNumber(this)">
+			</div>
+			<div class="col-md-4 number-error"></div>
+		</div>
+		<div class="row answer text-center">
+			3Đ			2V
 		</div>
 		<div class="row">
 			<div class="column col-md-4">

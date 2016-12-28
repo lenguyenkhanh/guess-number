@@ -1,3 +1,32 @@
+.container {
+	background: #cccccc;
+}
+
 .description {
 	text-align: center;
+}
+
+.row-mode{
+	padding:10px;
+}
+
+.btn-mode{
+	width:100%;
+}
+
+.person{
+	font-size:24px;
+}
+
+.guess-number{
+	font-size: 32px;
+}
+
+.answer{
+	font-size: 32px;
+}
+
+.number-error{
+	line-height: 32px;
+	font-size: 16px;
 }
