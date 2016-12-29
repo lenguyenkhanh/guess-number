@@ -22,6 +22,10 @@
 	font-size: 32px;
 }
 
+.guess {
+	font-size: 32px;
+}
+
 .answer{
 	font-size: 32px;
 }
@@ -29,4 +33,16 @@
 .number-error{
 	line-height: 32px;
 	font-size: 16px;
+}
+
+.correct-digit {
+	width:50px;
+	display:inline-block;
+	font-size: 32px;
+}
+
+.correct-position {
+	width: 50px;
+	display: inline-block;
+	font-size:32px;
 }

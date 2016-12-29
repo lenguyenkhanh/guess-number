@@ -2,6 +2,7 @@ var myNumber = generateRandomNumber();
 var myTurn = false;
 
 $(document).ready(function(){
+  $(".guess-number").focus();
 	$(".easy-mode").click(function() {
 		$(".description").text("Em chỉ chơi được số 5 chữ số thôi nha");
 	});
@@ -21,19 +22,51 @@ function checkInputNumber(number) {
 		$(".number-error").text("Số có 5 chữ số nha");
 	} else {
 		answer(myNumber, number);
-		$(".input").attr('disabled','disabled');
 		myTurn = !myTurn;
 		if (myTurn) {
 			$(".person").text("Em đoán");
-		}	
+      $(".input").html("<div class='guess text-center'>12345</p>");
+      $(".answer").html("<input type='text' class='form-control correct-digit' id='number' onkeydown='getYourNumber(this)'></input> <span style='margin-right:10px'>Đ</span>" + 
+                        "<input type='text' class='form-control correct-position' id='number' onkeydown='getYourNumber(this)'></input><span>V</span>" +
+                        "<div class='text-center error'></div>");
+		  $(".correct-digit").focus();
+    }	
 	}
+}
+
+function getYourNumber(input) {
+  var patt = /\d{1}/g;
+  if (event.keyCode == 13) {
+    var number = $(".guess").text();
+    var numCorrectDigit = $(".correct-digit").val();
+    var numCorrectPosition = $(".correct-position").val();
+    if (!patt.test(numCorrectDigit) && !patt.test(numCorrectPosition)) {
+      $(".error").text("Nhập số")
+    } else {
+      $(".k").append("<tr><td>" + number + "</td><td>" + numCorrectDigit + "</td><td>" + numCorrectPosition + "</td></tr>" );
+      myTurn = !myTurn;
+      if (!myTurn) {
+        $(".person").text("Chị đoán");
+        $(".input").html("<div class='col-md-4 col-md-offset-4'><input type='text' class='form-control guess-number' id='number' onkeydown='getNumber(this)'></div>" +
+                         "<div class='col-md-4 number-error'></div>");
+        $(".answer").text("");
+        $(".guess-number").focus();
+      }
+    }
+
+  }
 }
 
 function answer(myNumber, number) {
 	console.log(myNumber);
 	var numCorrectNumberAnswer = numCorrectNumber(myNumber, number);
-  	var numCorrectPositionAnswer = numCorrectPosition(myNumber, number);
-  	$(".answer").text(numCorrectNumberAnswer + "Đ " + numCorrectPositionAnswer + "V");
+	var numCorrectPositionAnswer = numCorrectPosition(myNumber, number);
+  if (isWin("shea", numCorrectNumberAnswer, numCorrectPositionAnswer)) {
+    alert("Congrelation!!! C thang roi ^^");
+    return;
+  }
+	$(".answer").text(numCorrectNumberAnswer + "Đ " + numCorrectPositionAnswer + "V");
+    $(".shea").append("<tr><td>" + number + "</td><td>" + numCorrectNumberAnswer + "</td><td>" + numCorrectPositionAnswer + "</td></tr>" );
 }
 
 function generateRandomNumber() {
@@ -71,4 +104,8 @@ function numCorrectPosition(myNumber, opponentGuess) {
     }
   }
   return correctPosition;
+}
+
+function isWin (name, digit, position) {
+  return digit == 5 && position == 5;
 }
