@@ -15,7 +15,7 @@ function getNumber(input) {
 }
 
 function checkInputNumber(number) {
-	var patt = /\d/g;
+	var patt = /^[0-9]+$/g;
 	if (!patt.test(number)) {
 		$(".number-error").text("Chị chỉ được nhập số thôi");
 	}else if(number.length != 5) {
@@ -27,7 +27,7 @@ function checkInputNumber(number) {
 			$(".person").text("Em đoán");
       $(".input").html("<div class='guess text-center'>12345</p>");
       $(".answer").html("<input type='text' class='form-control correct-digit' id='number' onkeydown='getYourNumber(this)'></input> <span style='margin-right:10px'>Đ</span>" + 
-                        "<input type='text' class='form-control correct-position' id='number' onkeydown='getYourNumber(this)'></input><span>V</span>" +
+                        "<input type='text' class='form-control correct-position' id='number' onkeydown='getYourNumber(this)'></input><span> V</span>" +
                         "<div class='text-center error'></div>");
 		  $(".correct-digit").focus();
     }	
@@ -35,13 +35,13 @@ function checkInputNumber(number) {
 }
 
 function getYourNumber(input) {
-  var patt = /\d{1}/g;
+  var patt = /^[0-9]$/g;
   if (event.keyCode == 13) {
     var number = $(".guess").text();
     var numCorrectDigit = $(".correct-digit").val();
     var numCorrectPosition = $(".correct-position").val();
-    if (!patt.test(numCorrectDigit) && !patt.test(numCorrectPosition)) {
-      $(".error").text("Nhập số")
+    if (!patt.test(numCorrectDigit) || !patt.test(numCorrectPosition)) {
+      $(".error").text("Chị chỉ được nhập số");
     } else {
       $(".k").append("<tr><td>" + number + "</td><td>" + numCorrectDigit + "</td><td>" + numCorrectPosition + "</td></tr>" );
       myTurn = !myTurn;
