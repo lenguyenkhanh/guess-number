@@ -25,7 +25,7 @@ function checkInputNumber(number) {
 		myTurn = !myTurn;
 		if (myTurn) {
 			$(".person").text("Em đoán");
-      var myGuess = guessOpponentNumber();
+      var myGuess = generateGuessNumber();
       $(".input").html("<div class='guess text-center'>" + myGuess + "</p>");
       $(".answer").html("<input type='text' class='form-control correct-digit' id='number' onkeydown='getYourNumber(this)'></input> <span style='margin-right:10px'>Đ</span>" + 
                         "<input type='text' class='form-control correct-position' id='number' onkeydown='getYourNumber(this)'></input><span> V</span>" +
@@ -42,13 +42,39 @@ function getYourNumber(input) {
     var number = $(".guess").text();
     var numCorrectDigit = $(".correct-digit").val();
     var numCorrectPosition = $(".correct-position").val();
-    opponentNumber.correctDigitArray.push(numCorrectDigit);
-    opponentNumber.correctPositionArray.push(numCorrectPosition);
-    opponentNumber.useToGuess.push([number, numberCorrectDigit, numberCorrectPosition]);
-    console.log(numCorrectDigit, numCorrectPosition);
+
+    if (numCorrectDigit == 5 && numCorrectPosition == 5) {
+      alert("Em thang roi ^^");
+      return;
+    }
+
     if (!patt1.test(numCorrectDigit) || !patt2.test(numCorrectPosition)) {
       $(".error").text("Chị chỉ được nhập số");
     } else {
+      console.log(number,"------");
+      // number = parseInt(number);
+      // numCorrectDigit = parseInt(numCorrectDigit);
+      // numCorrectPosition = parseInt(numCorrectPosition);  
+      opponentNumber.guessedNumber.push(number);
+      opponentNumber.numberCorrectDigit.push(numCorrectDigit);
+      opponentNumber.numberCorrectPosition.push(numCorrectPosition);
+
+      if(numCorrectDigit == 0 && opponentNumber.baseGuess) {
+        var arrDigit = getDigitFromNumber(number);
+        for(var i = 0; i < arrDigit.length; i++) {
+          opponentNumber.exclusiveDigit.push(arrDigit[i]);
+        }
+      } else if (numCorrectDigit == 5) {
+        if(opponentNumber.special) {
+          opponentNumber.specialArrayResult.push([number, numCorrectPosition]);
+        }
+        opponentNumber.correctResult.push([number,numCorrectPosition]);
+      } else if (!opponentNumber.baseGuess ) {
+          opponentNumber.imply.push([number, numCorrectDigit, numCorrectPosition]);
+      } else {
+        opponentNumber.useToGuess.push([number, numCorrectDigit, numCorrectPosition]);
+      }
+
       $(".k").append("<tr><td>" + number + "</td><td>" + numCorrectDigit + "</td><td>" + numCorrectPosition + "</td></tr>" );
       myTurn = !myTurn;
       if (!myTurn) {
@@ -64,7 +90,6 @@ function getYourNumber(input) {
 }
 
 function answer(myNumber, number) {
-	console.log(myNumber);
 	var numCorrectNumberAnswer = numCorrectNumber(myNumber, number);
 	var numCorrectPositionAnswer = numCorrectPosition(myNumber, number);
   if (isWin("shea", numCorrectNumberAnswer, numCorrectPositionAnswer)) {
@@ -98,7 +123,6 @@ function numCorrectNumber(myNumber, opponentGuess) {
        arrOpponentGuess.shift();
      }
   }
-  //console.log(result);
   return result.length;
 }
 
