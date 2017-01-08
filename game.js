@@ -60,18 +60,21 @@ function getYourNumber(input) {
       opponentNumber.numberCorrectPosition.push(numCorrectPosition);
 
       if(numCorrectDigit == 0 && opponentNumber.baseGuess) {
+        console.log("a");
         var arrDigit = getDigitFromNumber(number);
         for(var i = 0; i < arrDigit.length; i++) {
           opponentNumber.exclusiveDigit.push(arrDigit[i]);
         }
+      } else if(opponentNumber.special) {
+          opponentNumber.specialArrayResult.push([number, numCorrectDigit, numCorrectPosition]);
       } else if (numCorrectDigit == 5) {
-        if(opponentNumber.special) {
-          opponentNumber.specialArrayResult.push([number, numCorrectPosition]);
-        }
+        console.log("b");
         opponentNumber.correctResult.push([number,numCorrectPosition]);
       } else if (!opponentNumber.baseGuess ) {
+        console.log("c");
           opponentNumber.imply.push([number, numCorrectDigit, numCorrectPosition]);
       } else {
+        console.log("d");
         opponentNumber.useToGuess.push([number, numCorrectDigit, numCorrectPosition]);
       }
 

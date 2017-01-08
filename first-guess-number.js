@@ -72,7 +72,7 @@ var opponentNumber = {
   numberCorrectDigit: [],
   numberCorrectPosition: [],
   useToGuess: [],
-  speicalArray: [],
+  specialArray: [],
   specialArrayResult: [],
   exclusiveDigit: [],
   listFinish: [],
@@ -103,25 +103,6 @@ var Maybe = function(firstHalf, secondHalf){
     this.firstHalf = firstHalf;
     this.secondHalf = secondHalf;
   };
-
-// $(document).ready(function() {
-//   var myNumber = generateNumber();
-//   var opponentGuessNumber = "";
-//   do {
-//     // opponentGuessNumber = prompt("You guess:");
-//     // if(opponentGuessNumber == "" || opponentGuessNumber == null) {
-//     //   alert("You lose. My number is " + myNumber);
-//     //   console.log(opponentNumber);
-//     //   return;
-//     // } else {
-//     //   answer(myNumber, opponentGuessNumber);
-//       guessOpponentNumber();
-//       if(stop)
-//         return;
-//     // }
-//   } while(!isWin(myNumber, opponentGuessNumber));
-//   alert("CONGRATULATION!!!YOU WIN");
-// });
 
 function generateBaseGuessNumber(index) {
   return (2 * index - 1).toString().repeat(3) + ((2 * index) % 10).toString().repeat(2);
@@ -161,39 +142,81 @@ function permutation(str) {
   }
 }
 
-function permutationSpecial(input,firstNumber, secondNumber) {
-  if(str.length == 0) {
-    return [];
-  } else if(str.length == 1) {
-    return [str];
-  } else {
-    var result = [];
-    for(var k = 0; k < str.length; k++) {
-      var first = str.substring(k, k + 1);
-      var last = str.substring(0, k) + str.substring(k + 1, str.length);
-      var subPermutation = permutation(last);
-      for(var i = 0; i < subPermutation.length; i++) {
-        var value = first + subPermutation[i];
-        if(result.indexOf(value) < 0 && numCorrectPosition(value, firstNumber[0]) == firstNumber[2] && numCorrectPosition(value, secondNumber[0]) == secondNumber[2]) {
-          result.push(first + subPermutation[i]);
-        }
-      }
-    }
-    return result;
-  }
+function permutationString(str) {
+	if(str.length == 0) {
+		return [];
+	} else if(str.length == 1) {
+		return [str];
+	} else {
+		var result = [];
+		for(var k = 0; k < str.length; k++) {
+			var first = str.substring(k, k + 1);
+			var last = str.substring(0, k) + str.substring(k + 1, str.length);
+			var subPermutation = permutationString(last);
+			for(var i = 0; i < subPermutation.length; i++) {
+				if(result.indexOf(first + subPermutation[i]) < 0) {
+					result.push(first + subPermutation[i]);
+				}
+			}
+		}
+		return result;
+	}
+
 }
 
+function permutationSpecial(str,firstNumber, secondNumber) {
+	var permutationArr = permutationString(str);
+	var result = [];
+	for(var i = 0; i < permutationArr.length; i++) {
+		var value = permutationArr[i];
+		if(result.indexOf(value) < 0 && numCorrectPosition(value, firstNumber[0]) == firstNumber[2] && numCorrectPosition(value, secondNumber[0]) == secondNumber[2]) {
+          result.push(value);
+        }
+	}
+	console.log("permutation special: ",result);
+	return result;
+}
+
+// function permutationSpecial(str,firstNumber, secondNumber) {
+// 	console.log("str:", str);
+//   if(str.length == 0) {
+//     return [];
+//   } else if(str.length == 1) {
+//     return [str];
+//   } else {
+//     var result = [];
+//     for(var k = 0; k < str.length; k++) {
+//       var first = str.substring(k, k + 1);
+//       var last = str.substring(0, k) + str.substring(k + 1, str.length);
+//       console.log("last: ", last);
+//       var subPermutation = permutationString(last);
+//       console.log("permutation: ", subPermutation);	
+//       for(var i = 0; i < subPermutation.length; i++) {
+//         var value = first + subPermutation[i];
+//         if(result.indexOf(value) < 0 && numCorrectPosition(value, firstNumber[0]) == firstNumber[2] && numCorrectPosition(value, secondNumber[0]) == secondNumber[2]) {
+//           result.push(first + subPermutation[i]);
+//         }
+//       }
+//     }
+//     return result;
+//   }
+// }
+
 function getSpecialArray() {
+	console.log("special array: ", opponentNumber.specialArray);
   if(opponentNumber.specialArrayResult.length == 0) {
-    return opponentNumber.speicalArray.shift();
+    return opponentNumber.specialArray.shift();
   } else {
-    var number = opponentNumber.speicalArray.shift();
-    for(var i = 0; i < opponentNumber.specialArrayResult.length; i++) {
-      var pass = opponentNumber.specialArrayResult[i];
-      if(numCorrectPosition(number, pass[0]) == pass[1]) {
-        return pass[0];
-      }
-    }
+  	for (var k = 0; k < opponentNumber.specialArray.length; k++) {
+  		var number = opponentNumber.specialArray.shift();
+  		for(var i = 0; i < opponentNumber.specialArrayResult.length; i++) {
+  		  var pass = opponentNumber.specialArrayResult[i];
+  		  if(numCorrectPosition(number, pass[0]) == 5) {
+  		    return number;
+  		  }
+  		}
+  	}
+    
   }
 }
 
@@ -225,6 +248,7 @@ function generateGuessNumber() {
     numberToGuess = opponentNumber.actualResult.shift();
     return numberToGuess;
   }
+
   if(opponentNumber.imply.length >= 3) {
     opponentNumber.type = opponentNumber.imply[0][1].toString() + "-" + opponentNumber.imply[1][1].toString();
     switch(opponentNumber.type) {
@@ -1251,6 +1275,7 @@ function generateGuessNumber() {
             opponentNumber.result.secondHalf.push(getDigitFromNumber(firstNumber[0])[0]);
           } else if (firstNumber[2] == 0 && secondNumber[2] == 1 && result[2] == 0) {
             //0v-1v-0v: first[1]first[1]second[0]/first[0]
+            console.log("+++++++++++++");
             opponentNumber.result.firstHalf.push(getDigitFromNumber(firstNumber[0])[1]);
             opponentNumber.result.firstHalf.push(getDigitFromNumber(firstNumber[0])[1]);
             opponentNumber.result.firstHalf.push(getDigitFromNumber(secondNumber[0])[0]);
@@ -1314,6 +1339,7 @@ function generateGuessNumber() {
             opponentNumber.result.secondHalf.push(getDigitFromNumber(firstNumber[0])[0]);
           }
         }
+        break;
       case "4-1":
         opponentNumber.special = true;
         var firstNumber = opponentNumber.imply[0];
@@ -1324,19 +1350,23 @@ function generateGuessNumber() {
           var firstDigit = getDigitFromNumber(firstNumber[0]);
           var secondDigit = getDigitFromNumber(secondNumber[0]);
           value = firstDigit[0].toString().repeat(3) + firstDigit[1] + secondDigit[0];
-          opponentNumber.speicalArray = permutationSpecial(value, firstNumber, secondNumber);
+          opponentNumber.specialArray = permutationSpecial(value, firstNumber, secondNumber);
         } else if(result[1] == 3) {
+        	console.log(">>>>>>>");
           var firstDigit = getDigitFromNumber(firstNumber[0]);
           var secondDigit = getDigitFromNumber(secondNumber[0]);
-          value = firstNumber[0].toString().repeat(3) + firstNumber[1] + secondNumber[1];
-          opponentNumber.speicalArray = permutationSpecial(value, firstNumber, secondNumber);
-          value = firstNumber[0].toString.repeat(2) + firstDigit[1].toString().repeat(2) + secondDigit[0];
-          opponentNumber.speicalArray.concat(permutationSpecial(value, firstNumber, secondNumber));
+          console.log("firstDigit: ", firstDigit);
+          console.log("secondDigit: ", secondDigit);
+          value = firstDigit[0].toString().repeat(3) + firstDigit[1] + secondDigit[1];
+          console.log("value: ", value);
+          opponentNumber.specialArray = permutationSpecial(value, firstNumber, secondNumber);
+          value = firstDigit[0].toString().repeat(2) + firstDigit[1].toString().repeat(2) + secondDigit[0];
+          opponentNumber.specialArray = opponentNumber.specialArray.concat(permutationSpecial(value, firstNumber, secondNumber));
         } else if(result[1] == 2) {
           var firstDigit = getDigitFromNumber(firstNumber[0]);
           var secondDigit = getDigitFromNumber(secondNumber[0]);
           value = firstNumber[0].toString().repeat(2) + firstNumber[1].toString().repeat(2) + secondNumber[1];
-          opponentNumber.speicalArray = permutationSpecial(value, firstNumber, secondNumber);
+          opponentNumber.specialArray = permutationSpecial(value, firstNumber, secondNumber);
         }
         opponentNumber.special = true;
     }
@@ -1346,27 +1376,28 @@ function generateGuessNumber() {
     }
     opponentNumber.imply = [];
     if(opponentNumber.useToGuess.length < 2) {
+      console.log(opponentNumber.maybeArr, opponentNumber.result);
       mergeMaybe(opponentNumber.maybeArr, opponentNumber.result);
       numberToGuess = opponentNumber.actualResult[opponentNumber.actualResult.length - 1]
       return numberToGuess;
     }
   }
+
   var totalCorrectDigit = sumArray(opponentNumber.numberCorrectDigit);
+  console.log("totalCorrectDigit: ", totalCorrectDigit);
   if(totalCorrectDigit == 5 || opponentNumber.numberGuess > 5){
     opponentNumber.baseGuess = false;
   }
+
   if(opponentNumber.baseGuess) {
     numberToGuess = generateBaseGuessNumber(opponentNumber.numberGuess);
   } else {
     opponentNumber.useToGuess = sort(opponentNumber.useToGuess);
-    console.log("here");
     if(opponentNumber.useToGuess.length >= 2) {
-    	console.log(opponentNumber.useToGuess);
       var firstNumber = opponentNumber.useToGuess.shift();
       var secondNumber = opponentNumber.useToGuess.shift();
       opponentNumber.imply.push(firstNumber);
       opponentNumber.imply.push(secondNumber);
-      console.log(firstNumber, secondNumber);
       numberToGuess = getDigitFromNumber(firstNumber[0])[0].toString().repeat(3) + getDigitFromNumber(secondNumber[0])[0].toString().repeat(2);
     } 
   }
@@ -1462,7 +1493,7 @@ function sumArray(arr) {
   } else {
     var result = 0;
     for(var i = 0; i < arr.length; i++) {
-      result += arr[i];
+      result += parseInt(arr[i]);
     }
     return result;
   }
